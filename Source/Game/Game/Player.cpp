@@ -14,6 +14,8 @@
 #include <Components/SpriteRenderer.h>
 #include <Components/RigidBody.h>
 
+
+
 void Player::Update(float dt)
 {
     viper::Particle particle;
@@ -49,6 +51,16 @@ void Player::Update(float dt)
     transform.position.x = viper::math::wrap(transform.position.x, 0.0f, (float)viper::GetEngine().GetRenderer().GetWidth());
     transform.position.y = viper::math::wrap(transform.position.y, 0.0f, (float)viper::GetEngine().GetRenderer().GetHeight());
 
+    //Player* player = m_scene->GetActorByName<Player>("player");
+
+    
+    timer -= dt;
+    if (timer <= 0) {
+        isPowered = false;
+    }
+    else {
+        isPowered = true;
+    }
     // check fire key pressed
     fireTimer -= dt;
     if (viper::GetEngine().GetInput().GetKeyDown(SDL_SCANCODE_SPACE) && fireTimer <= 0) {
@@ -89,13 +101,24 @@ void Player::Update(float dt)
     Actor::Update(dt);
 }
 
-
+void Player::PoweredUp() {
+    isPowered = true;
+    timer = 8;
+ 
+}
 
 void Player::OnCollision(Actor* other)
 {
+
     if (tag != other->tag && other->tag != "powerUp") {
-        destroyed = true;
-        dynamic_cast<SpaceGame*>(scene->GetGame())->OnPlayerDeath();
+        if (isPowered == true) {
+            destroyed = false;
+        }
+        else {
+
+            destroyed = true;
+            dynamic_cast<SpaceGame*>(scene->GetGame())->OnPlayerDeath();
+        }
     }
 }
 

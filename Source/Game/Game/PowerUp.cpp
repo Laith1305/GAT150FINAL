@@ -7,7 +7,7 @@
 #include "Math/Vector3.h"
 #include "Core/Random.h"
 #include "Framework/Scene.h"
-#include "Player.h"
+
 
 #include "Input/InputSystem.h"
 #include "Audio/AudioSystem.h"
@@ -19,17 +19,16 @@ void viper::PowerUp::Update(float dt){
 
 }
 
-
 void viper::PowerUp::OnCollision(Actor* other){
     if (tag != other->tag) {
         destroyed = true;
-       viper::Actor* actor=scene->GetActorByName("Player");
-       if (actor) {
-           auto player= actor->GetComponent<Player>();
+       
+        auto player = dynamic_cast<Player*>(other);
            if (player) {
                player->isPowered = true;
+               player->PoweredUp();
            }
-        }
+       
         dynamic_cast<SpaceGame*>(scene->GetGame())->PoweredUp();
         
     }

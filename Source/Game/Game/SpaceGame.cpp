@@ -34,7 +34,7 @@ bool SpaceGame::Initialize()
     
     return true;
 }
-int timer = 5;
+//int timer = 8;
 
 
 void SpaceGame::Update(float dt)
@@ -65,6 +65,8 @@ void SpaceGame::Update(float dt)
         //std::shared_ptr<viper::Model> model = std::make_shared<viper::Model>(GameData::shipPoints, viper::vec3{ 0.0f, 0.4f, 1.0f });
         viper::Transform transform{ viper::vec2{ viper::GetEngine().GetRenderer().GetWidth() * 0.5f, viper::GetEngine().GetRenderer().GetHeight() * 0.5f }, 0, 5 };
         auto player = std::make_unique<Player>(transform);
+        player->fireTime = 1;
+        player->fireTimer = 3;
         player->speed = 1500.0f;
         player->rotationRate = 180.0f;
         //player->damping = 1.5f;
@@ -143,18 +145,18 @@ void SpaceGame::Update(float dt)
 void SpaceGame::Draw(viper::Renderer& renderer) {
     if (m_gameState == GameState::Title) {
         m_titleText->Create(renderer, "PIT VIPER", viper::vec3{ 1, 0, 0 });
-        m_titleText->Draw(renderer, 400, 400);
+        m_titleText->Draw(renderer, 700, 700);
     }
     if (m_gameState == GameState::GameOver) {
         m_titleText->Create(renderer, "GAME OVER", viper::vec3{ 1, 0, 0 });
-        m_titleText->Draw(renderer, 400, 400);
+        m_titleText->Draw(renderer, 700, 700);
     }
 
     m_scoreText->Create(renderer, "SCORE  " + std::to_string(m_score), { 1, 1, 1 });
     m_scoreText->Draw(renderer, 20, 20);
 
     m_livesText->Create(renderer, "LIVES  " + std::to_string(m_lives), {1, 1, 1});
-    m_livesText->Draw(renderer, (float)(renderer.GetWidth() - 200), (float)20);
+    m_livesText->Draw(renderer, (float)(renderer.GetWidth() - 375), (float)20);
 
     m_scene->Draw(renderer);
 
@@ -207,7 +209,7 @@ void SpaceGame::SpawnPowerUp(){
 
 
     Player* player = m_scene->GetActorByName<Player>("player");
-    
+
     if (player) {
 
 
@@ -240,14 +242,8 @@ void SpaceGame::SpawnPowerUp(){
 
 void SpaceGame::PoweredUp() {
 
-
-    timer -= viper::GetEngine().GetTime().GetDeltaTime();
-    if (timer == 0) {
-        return;
-    }
-    else {
-        
-    }
+    
+    
 
 }
 
