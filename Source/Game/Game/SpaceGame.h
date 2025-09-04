@@ -25,13 +25,16 @@ public:
 	void Draw(class viper::Renderer& renderer) override;
 
 	void OnPlayerDeath();
+	void PoweredUp();
 
 private:
 	void SpawnEnemy();
+	void SpawnPowerUp();
 
 private:
 	GameState m_gameState = GameState::Initialize;
 	float m_enemySpawnTimer{ 0 };
+	float m_powerUpSpawnTimer{ 0 };
 	float m_stateTimer{ 0 };
 
 

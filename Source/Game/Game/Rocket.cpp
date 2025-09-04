@@ -5,6 +5,7 @@
 #include "Renderer/ParticleSystem.h"
 #include "Core/Random.h"
 #include "Player.h"
+#include <Components/RigidBody.h>
 
 void Rocket::Update(float dt)
 {

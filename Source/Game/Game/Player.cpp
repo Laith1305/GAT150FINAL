@@ -21,7 +21,7 @@ void Player::Update(float dt)
     particle.velocity = viper::vec2{ viper::random::getReal(-200.0f, 200.0f), viper::random::getReal(-200.0f, 200.0f) };
     particle.color = viper::vec3{ 1, 1, 1 };
     particle.lifespan = 2;
-    //viper::GetEngine().GetPS().AddParticle(particle);
+    viper::GetEngine().GetPS().AddParticle(particle);
 
     // rotation
     float rotate = 0;
@@ -89,9 +89,11 @@ void Player::Update(float dt)
     Actor::Update(dt);
 }
 
+
+
 void Player::OnCollision(Actor* other)
 {
-    if (tag != other->tag) {
+    if (tag != other->tag && other->tag != "powerUp") {
         destroyed = true;
         dynamic_cast<SpaceGame*>(scene->GetGame())->OnPlayerDeath();
     }

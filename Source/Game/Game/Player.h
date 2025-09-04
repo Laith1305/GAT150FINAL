@@ -7,7 +7,7 @@ public:
 	float rotationRate = 180;
 	float fireTime = 0.2f;
 	float fireTimer = 0.0f;
-
+	bool isPowered = false;
 public:
 	Player() = default;
 	Player(const viper::Transform& transform) :

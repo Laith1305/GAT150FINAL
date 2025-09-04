@@ -11,6 +11,7 @@
 #include "Enemy.h"
 #include "GameData.h"
 #include "Resources/ResourceManager.h"
+#include "PowerUp.h"
 
 #include <vector>
 #include <Components/SpriteRenderer.h>
@@ -27,12 +28,14 @@ bool SpaceGame::Initialize()
     m_uiFont = std::make_shared<viper::Font>();
     m_uiFont->Load("arcadeclassic.ttf", 48);*/
 
-    m_titleText = std::make_unique<viper::Text>(viper::ResourceManager::Instance().GetWithID<viper::Font>("title_font", "arcadeclassic.ttf", 128.0f));
-    m_scoreText = std::make_unique<viper::Text>(viper::ResourceManager::Instance().GetWithID<viper::Font>("ui_font", "arcadeclassic.ttf", 48.0f));
-    m_livesText = std::make_unique<viper::Text>(viper::ResourceManager::Instance().GetWithID<viper::Font>("ui_font", "arcadeclassic.ttf", 48.0f));
+    m_titleText = std::make_unique<viper::Text>(viper::ResourceManager::Instance().GetWithID<viper::Font>("title_font", "arcadeclassic.ttf", 96.0f));
+    m_scoreText = std::make_unique<viper::Text>(viper::ResourceManager::Instance().GetWithID<viper::Font>("ui_font", "arcadeclassic.ttf", 24.0f));
+    m_livesText = std::make_unique<viper::Text>(viper::ResourceManager::Instance().GetWithID<viper::Font>("ui_font", "arcadeclassic.ttf", 24.0f));
     
     return true;
 }
+int timer = 5;
+
 
 void SpaceGame::Update(float dt)
 {
@@ -94,6 +97,13 @@ void SpaceGame::Update(float dt)
         if (m_enemySpawnTimer <= 0) {
             m_enemySpawnTimer = 2;
             SpawnEnemy();
+
+        }
+        m_powerUpSpawnTimer -= dt;
+        if (m_powerUpSpawnTimer <= 0) {
+            m_powerUpSpawnTimer = 20;
+            SpawnPowerUp();
+
         }
 
         break;
@@ -163,7 +173,7 @@ void SpaceGame::SpawnEnemy() {
         //viper::Resources().Get<viper::Texture>("textures/blue_05.png", viper::GetEngine().GetRenderer());
         // spawn at random position away from player
         viper::vec2 position = player->transform.position + viper::random::onUnitCircle() * viper::random::getReal(200.0f, 500.0f);
-        viper::Transform transform{ position, viper::random::getReal(0.0f, 360.0f), 2};
+        viper::Transform transform{ position, viper::random::getReal(0.0f, 360.0f), 4};
 
         std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(transform);
         //enemy->damping = 0.5f;
@@ -188,6 +198,55 @@ void SpaceGame::SpawnEnemy() {
 
 
         m_scene->AddActor(std::move(enemy));
+    }
+
+}
+
+void SpaceGame::SpawnPowerUp(){
+
+
+
+    Player* player = m_scene->GetActorByName<Player>("player");
+    
+    if (player) {
+
+
+        viper::vec2 position = player->transform.position + viper::random::onUnitCircle() * viper::random::getReal(200.0f, 500.0f);
+        viper::Transform transform{ position, viper::random::getReal(0.0f, 360.0f), 2 };
+
+        std::unique_ptr<viper::PowerUp> powerUp = std::make_unique<viper::PowerUp>(transform);
+        powerUp->tag = "powerUp";
+
+
+        auto spriteRenderer = std::make_unique<viper::SpriteRenderer>();
+        spriteRenderer->textureName = "textures/projectile02-2.png";
+        powerUp->AddComponent(std::move(spriteRenderer));
+
+
+        auto rb = std::make_unique<viper::RigidBody>();
+        rb->damping = 0.5f;
+        powerUp->AddComponent(std::move(rb));
+
+        auto collider = std::make_unique<viper::CircleCollider2D>();
+        collider->radius = 60;
+        powerUp->AddComponent(std::move(collider));
+
+
+        m_scene->AddActor(std::move(powerUp));
+
+    }
+}
+
+
+void SpaceGame::PoweredUp() {
+
+
+    timer -= viper::GetEngine().GetTime().GetDeltaTime();
+    if (timer == 0) {
+        return;
+    }
+    else {
+        
     }
 
 }
