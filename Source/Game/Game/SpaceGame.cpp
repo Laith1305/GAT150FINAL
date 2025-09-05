@@ -73,6 +73,10 @@ void SpaceGame::Update(float dt)
         player->name = "player";
         player->tag = "player";
 
+        if (player->isPowered) {
+            player->fireTime = 0.5f;
+            player->fireTimer = 0.2f;
+        }
 
         auto spriteRenderer = std::make_unique<viper::SpriteRenderer>();
         spriteRenderer->textureName = "textures/blue_05.png";
